@@ -1,94 +1,97 @@
+Plain_Text = "the house is being sold tonight"
 
-plaintext = "the house is being sold tonight"
-print("Plaintext:", plaintext)
 
-key_num = 7
-print("Initial key value:", key_num)
+def Vignere(P, k):
+    Cipher_text = ""
+    index = 0
+    k = k * int(len(P) / len(k) + 1)
+    for char in P:
+        if (char.isalpha()):
+            n = ord(char)
+            to_add = ord(k[index]) - ord('a')
+            index += 1
+            if (char.islower()):
+                n += to_add
+                if (n > ord('z')):
+                    n -= 26
+            else:
+                n += to_add
+                if (n > ord('Z')):
+                    n -= 26
+            Cipher_text += chr(n)
+        else:
+            Cipher_text += char
+    Cipher_text = Cipher_text.replace(" ", "")
+    return Cipher_text
 
-plaintext_no_spaces = plaintext.replace(" ", "")
-initial_key_char = chr(key_num + 65)
 
-autokey = initial_key_char + plaintext_no_spaces
+def vignere_decode(P, k):
+    Cipher_text = ""
+    index = 0
+    k = k * int(len(P) // len(k) + 1)
+    for char in P:
+        if (char.isalpha()):
+            n = ord(char)
+            to_add = ord(k[index]) - ord('a')
+            index += 1
+            if (char.islower()):
+                n -= to_add
+                if (n < ord('a')):
+                    n += 26
+            else:
+                n -= to_add
+                if (n < ord('A')):
+                    n += 26
+            Cipher_text += chr(n)
+        else:
+            Cipher_text += char
+    print(Cipher_text)
 
-encrypted_text = ""
-decrypted_text = ""
 
-key_idx = 0
-for i in range(len(plaintext)):
-    p_char = plaintext[i]
-
-    if p_char.isalpha():
-        k_char = autokey[key_idx]
-
-        p_val = ord(p_char) - ord('a')
-        k_val = ord(k_char) - ord('a')
-
-        encrypted_val = (p_val + k_val) % 26
-        encrypted_char = chr(encrypted_val + ord('a'))
-        encrypted_text += encrypted_char
-
-        key_idx += 1
+def autokey(P, key):  # key is a number
+    if (P[0].islower()):
+        add = 'a'
     else:
+        add = 'A'
+    k = chr(key + ord(add)) + P
+    k = k.replace(" ", "")
+    return (Vignere(P, k))
 
-        encrypted_text += p_char
 
-print("Encrypted cipher:", encrypted_text)
-
-
-decrypted_text_with_spaces = ""
-key_idx = 0
-for i in range(len(encrypted_text)):
-    e_char = encrypted_text[i]
-
-    if e_char.isalpha():
-        k_char = autokey[key_idx]
-
-        e_val = ord(e_char) - ord('a')
-        k_val = ord(k_char) - ord('a')
-
-        decrypted_val = (e_val - k_val + 26) % 26
-        decrypted_char = chr(decrypted_val + ord('a'))
-        decrypted_text_with_spaces += decrypted_char
-
-        key_idx += 1
+def autokey_decode(P, key):
+    if (P[0].islower()):
+        add = 'a'
     else:
-        decrypted_text_with_spaces += e_char
+        add = 'A'
+    plain_Text = ""
+    k = chr(key + ord(add))  # k is the current decoding key
+    for i in range(len(P)):
+        if (P[i].islower()):
+            add = 'a'
+        else:
+            add = 'A'
+        j = ord(k) - ord(add)  # spaces to be decreased
+        curr = ord(P[i]) - j
+        if (add == 'a' and curr < ord('a')):
+            curr += 26
+        if (add == 'A' and curr < ord('A')):
+            curr += 26
+        k = chr(curr)
+        plain_Text = plain_Text + k
 
-print("Decrypted cipher:", decrypted_text_with_spaces)
-
-key="dollars"
-str="the house is being sold tonight"
-print("Key: %s" %key)
-print("Plaintext: %s" %str)
-str=str.replace(" ","")
-res=""
-decr=""
-
-if len(str) != len(key):
-    for i in range(len(str) - len(key)):
-        key+=(key[i % len(key)])
-
-for i in range(len(str)):
-    char = str[i]
-    if char.isupper():
-        res+= chr((ord(char) + ord(key[i]) - 2 * ord('A')) % 26 + ord('A'))
-    elif char.islower():
-        res+= chr((ord(char) + ord(key[i]) - 2 * ord('a')) % 26 + ord('a'))
-    else:
-        res+= char
-
-print("Cipher: %s" %res)
-print("\nDecrypting the cipher: ")
+    print(plain_Text)
 
 
-for i in range(len(res)):
-    char = res[i]
-    if char.isupper():
-        decr+= chr((ord(char) - ord(key[i]) + 26) % 26 + ord('A'))
-    elif char.islower():
-        decr+= chr((ord(char) - ord(key[i]) + 26) % 26 + ord('a'))
-    else:
-        decr+= char
-
-
-print("Decrypted cipher: %s" %decr)
+print("Plain Text:", Plain_Text)
+print("\nVignere Cipher with Key=dollars:")
+a = Vignere(Plain_Text, "dollars")
+print("Encoded:")
+print(a)
+print("Decoded:")
+vignere_decode(a, "dollars")
+print("\nAutoKey Cipher with Key=7:")
+a = autokey(Plain_Text, 7)
+print("Encoded:")
+print(a)
+print("Decoded:")
+autokey_decode(a, 7)
