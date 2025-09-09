@@ -1,15 +1,33 @@
 from Crypto.Cipher import DES
-import base64
+from Crypto.Util.Padding import pad, unpad
 
+def encrypt(message, key):
+    print("The Original Message is:", message)
 
-key = b'A1B2C3D4'
-message = b'Confidential Data'
+    key_bytes = key.encode('utf-8')
+    message_bytes = message.encode('utf-8')
 
-cipher = DES.new(key, DES.MODE_OFB)
-msg = cipher.iv + cipher.encrypt(message)
+    cipher = DES.new(key_bytes, DES.MODE_ECB)
+    padded = pad(message_bytes, DES.block_size)
+    ct = cipher.encrypt(padded)
 
-encrypted_message = des_encrypt(message, key)
-print(f"Encrypted Message: {encrypted_message}")
+    print("Ciphertext in hexadecimal is:", ct.hex())
+    print("Ciphertext as raw bytes:", ct)
+    return ct
 
-decrypted_message = des_decrypt(encrypted_message, key)
-print(f"Decrypted Message: {decrypted_message}")
+def decrypt(ct, key):
+    key_bytes = key.encode('utf-8')
+    cipher = DES.new(key_bytes, DES.MODE_ECB)
+
+    decrypted_padded = cipher.decrypt(ct)
+    decrypted = unpad(decrypted_padded, DES.block_size)
+    print("Decrypted message is:", decrypted.decode('utf-8'))
+    return decrypted.decode('utf-8')
+
+key = "A1B2C3D4"
+message = "Confidential Data"
+
+ct = encrypt(message, key)
+dt = decrypt(ct, key)
+
+print("Successful Encryption and Decryption: ", message==dt)

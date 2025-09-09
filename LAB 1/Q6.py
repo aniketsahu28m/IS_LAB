@@ -1,45 +1,50 @@
-def egcd(a, b):
-    x, y, u, v = 0, 1, 1, 0
-    while a != 0:
-        q, r = b // a, b % a
-        m, n = x - u * q, y - v * q
-        b, a, x, y, u, v = a, r, u, v, m, n
-    return b, x, y
+letter_to_num = {ch: i for i, ch in enumerate('ABCDEFGHIJKLMNOPQRSTUVWXYZ')}
+num_to_letter = {i: ch for i, ch in enumerate('ABCDEFGHIJKLMNOPQRSTUVWXYZ')}
 
-def modInverse(a, m):
-    g, x, y = egcd(a, m)
-    if g != 1:
-        return None
-    else:
-        return x % m
+def gcd(x, y):
+    while y:
+        x, y = y, x % y
+    return x
 
-def affine_decrypt(ciphertext, a_inv, b):
+def brute_force_affine_keys(pt_pair, ct_pair):
+    p0, p1 = letter_to_num[pt_pair[0].upper()], letter_to_num[pt_pair[1].upper()]
+    c0, c1 = letter_to_num[ct_pair[0].upper()], letter_to_num[ct_pair[1].upper()]
+    for a in range(1, 26):
+        if gcd(a, 26) != 1:
+            continue
+        for b in range(26):
+            if (a * p0 + b) % 26 == c0 and (a * p1 + b) % 26 == c1:
+                return a, b
+    return None, None
+
+def mod_inverse(a, m=26):
+    a = a % m
+    for x in range(1, m):
+        if (a * x) % m == 1:
+            return x
+    return None
+
+def affine_decrypt(ciphertext, a, b):
+    inv_a = mod_inverse(a, 26)
     plaintext = ""
-    for char in ciphertext:
-        if 'A' <= char <= 'Z':
-            C = ord(char) - ord('A')
-            P = (a_inv * (C - b)) % 26
-            plaintext += chr(P + ord('A'))
+    for ch in ciphertext.upper():
+        if ch.isalpha():
+            c = letter_to_num[ch]
+            p = (inv_a * (c - b)) % 26
+            plaintext += num_to_letter[p]
         else:
-            plaintext += char
+            plaintext += ch
     return plaintext
 
-ciphertext = "XPALASXYFGFUKPXUSOGEUTKCDGEXANMGNVS"
-known_plaintext_pair = "ab"
-known_ciphertext_pair = "GL"
+if __name__ == "__main__":
+    plaintext_pair = "AB"
+    ciphertext_pair = "GL"
+    ciphertext = "XPALASXYFGFUKPXUSOGEUTKCDGEXANMGNV"
 
-b_key = (ord(known_ciphertext_pair[0]) - ord('A'))
-print(f"Deduced b key: {b_key}")
-
-a_key = ((ord(known_ciphertext_pair[1]) - ord('A')) - b_key) % 26
-print(f"Deduced a key: {a_key}")
-
-a_inv_key = modInverse(a_key, 26)
-if a_inv_key is None:
-    print(f"Error: 'a' key {a_key} has no modular inverse modulo 26. Cannot decrypt.")
-else:
-    print(f"Modular inverse of a ({a_key}) is: {a_inv_key}")
-
-    decrypted_message = affine_decrypt(ciphertext, a_inv_key, b_key)
-    print(f"\nOriginal Ciphertext: {ciphertext}")
-    print(f"Decrypted Plaintext: {decrypted_message}")
+    a, b = brute_force_affine_keys(plaintext_pair, ciphertext_pair)
+    if a is None:
+        print("No valid keys found.")
+    else:
+        print(f"Found keys: a={a}, b={b}")
+        decrypted_text = affine_decrypt(ciphertext, a, b)
+        print("Decrypted text:", decrypted_text)

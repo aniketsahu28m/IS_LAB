@@ -1,6 +1,5 @@
 Plain_Text = "the house is being sold tonight"
 
-
 def Vignere(P, k):
     Cipher_text = ""
     index = 0
