@@ -153,13 +153,82 @@ LAB6
 Lab Exercises
 1. Try using the Elgammal, Schnor asymmetric encryption standard and verify the above
 steps.
-2. Try using the Diffie-Hellman asymmetric encryption standard and verify the above
+
+3. Try using the Diffie-Hellman asymmetric encryption standard and verify the above
 steps.
-3. Try the same in a client server-based scenario and record your observation and
+
+5. Try the same in a client server-based scenario and record your observation and
 analysis.
+
 Additional Exercise
 1. Explore the link https://www.nmichaels.org/rsa.py for better understanding.
 Demonstrate CIA traid using RSA encryption and digital signature along with SHA
 hashing.
 
 
+LAB7
+1. Implement the Paillier encryption scheme in Python. Encrypt two integers (e.g., 15
+and 25) using your implementation of the Paillier encryption scheme. Print the
+ciphertexts. Perform an addition operation on the encrypted integers without decrypting
+them. Print the result of the addition in encrypted form. Decrypt the result of the addition
+and verify that it matches the sum of the original integers.
+
+3. Utilize the multiplicative homomorphic property of RSA encryption. Implement a
+basic RSA encryption scheme in Python. Encrypt two integers (e.g., 7 and 3) using your
+implementation of the RSA encryption scheme. Print the ciphertexts. Perform a
+multiplication operation on the encrypted integers without decrypting them. Print the
+result of the multiplication in encrypted form. Decrypt the result of the multiplication
+and verify that it matches the product of the original integers.
+
+AD1
+Implement similar exercise for other PHE operations (like homomorphic multiplication
+using ElGamal) or explore different functionalities within Paillier.
+1a: Homomorphic Multiplication (ElGamal Cryptosystem): Implement ElGamal
+encryption and demonstrate homomorphic multiplication on encrypted messages.
+(ElGamal supports multiplication but not homomorphic addition.)
+1b: Secure Data Sharing (Paillier): Simulate a scenario where two parties share
+46
+encrypted data and perform calculations on the combined data without decryption.
+1c: Secure Thresholding (PHE): Explore how PHE can be used for secure multi-party
+computation, where a certain number of parties need to collaborate on a computation
+without revealing their individual data.
+1d: Performance Analysis (Benchmarking): Compare the performance of different
+PHE schemes (Paillier and ElGamal) for various operations
+
+LAB8
+Lab Exercise 1: Execute the following for SSE:
+1a. Create a dataset: Generate a text corpus of at least ten documents. Each document
+should contain multiple words.
+1b. Implement encryption and decryption functions: Use the AES encryption and
+decryption functions.
+1c. Create an inverted index: Build an inverted index mapping word to the list of
+document IDs containing those words.
+- Encrypt the index using the provided encryption function.
+1d. Implement the search function:
+- Take a search query as input.
+- Encrypt the query.
+- Search the encrypted index for matching terms.
+- Decrypt the returned document IDs and display the corresponding documents
+Lab Exercise 2: Execute the following for PKSE:
+2a. Create a dataset:
+- Generate a text corpus of at least ten documents. Each document should contain
+multiple words.
+2b. Implement encryption and decryption functions: Use the Paillier cryptosystem for
+encryption and decryption.
+2c. Create an encrypted index:
+- Build an inverted index mapping word to the list of document IDs containing those
+54
+words.
+- Encrypt the index using the Paillier cryptosystem.
+2d. Implement the search function:
+o Take a search query as input.
+o Encrypt the query using the public key.
+o Search the encrypted index for matching terms.
+o Decrypt the returned document IDs using the private key.
+Additional Questions:
+1. Demonstrate how to securely store and transmit data using GnuPG. Additionally,
+show how to create a digital signature for the data and verify the signature after
+transmission.
+2. Configure and use Snort as a Network Intrusion Detection System (NIDS) to monitor
+realtime network traffic. Capture network traffic, apply Snort rules, and analyze the logs
+to identify any potential intrusions.
